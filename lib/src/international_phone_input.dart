@@ -157,6 +157,7 @@ class _InternationalPhoneInputState extends State<InternationalPhoneInput> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
+                          Text(value.code),
                           Image.asset(
                             value.flagUri,
                             width: 32.0,
