@@ -40,7 +40,7 @@ class InternationalPhoneInput extends StatefulWidget {
 }
 
 class _InternationalPhoneInputState extends State<InternationalPhoneInput> {
-  Country selectedItem;
+  Country selectedItem = null;
   List<Country> itemList = [];
 
   String errorText;
@@ -93,7 +93,7 @@ class _InternationalPhoneInputState extends State<InternationalPhoneInput> {
 
   _validatePhoneNumber() {
     String phoneText = phoneTextController.text;
-    if (phoneText != null && phoneText.isNotEmpty) {
+    if (phoneText != null && phoneText.isNotEmpty && selectedItem != null) {
       PhoneService.parsePhoneNumber(phoneText, selectedItem.code)
           .then((isValid) {
         setState(() {
@@ -104,10 +104,10 @@ class _InternationalPhoneInputState extends State<InternationalPhoneInput> {
           if (isValid) {
             PhoneService.getNormalizedPhoneNumber(phoneText, selectedItem.code)
                 .then((number) {
-              widget.onPhoneNumberChange(phoneText, number, selectedItem.code);
+              widget.onPhoneNumberChange(phoneText, number, selectedItem.dialCode);
             });
           } else {
-            widget.onPhoneNumberChange('', '', selectedItem.code);
+            widget.onPhoneNumberChange('', '', selectedItem.dialCode);
           }
         }
       });
@@ -132,7 +132,9 @@ class _InternationalPhoneInputState extends State<InternationalPhoneInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return selectedItem == null
+        ? Center(child: CircularProgressIndicator())
+        : Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
