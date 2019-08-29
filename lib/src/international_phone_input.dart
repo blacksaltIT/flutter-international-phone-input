@@ -178,8 +178,11 @@ class _InternationalPhoneInputState extends State<InternationalPhoneInput> {
                 ),
                 Flexible(
                     child: TextField(
-                  keyboardType: TextInputType.phone,
+                  keyboardType: TextInputType.number,
                   controller: phoneTextController,
+                  inputFormatters: <TextInputFormatter>[
+                    WhitelistingTextInputFormatter.digitsOnly
+                  ],
                   decoration: InputDecoration(
                     hintText: hintText,
                     errorText: hasError ? errorText : null,
