@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 
 class InternationalPhoneInput extends StatefulWidget {
   final void Function(String phoneNumber, String internationalizedPhoneNumber,
-      String isoCode) onPhoneNumberChange;
+      String isoCode, bool isValid) onPhoneNumberChange;
   final String initialPhoneNumber;
   final String initialSelection;
   final String errorText;
@@ -104,10 +104,11 @@ class _InternationalPhoneInputState extends State<InternationalPhoneInput> {
           if (isValid) {
             PhoneService.getNormalizedPhoneNumber(phoneText, selectedItem.code)
                 .then((number) {
-              widget.onPhoneNumberChange(phoneText, number, selectedItem.dialCode);
+              widget.onPhoneNumberChange(
+                  phoneText, number, selectedItem.dialCode, true);
             });
           } else {
-            widget.onPhoneNumberChange('', '', selectedItem.dialCode);
+            widget.onPhoneNumberChange('', '', '', false);
           }
         }
       });
@@ -135,59 +136,60 @@ class _InternationalPhoneInputState extends State<InternationalPhoneInput> {
     return selectedItem == null
         ? Center(child: CircularProgressIndicator())
         : Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          DropdownButtonHideUnderline(
-            child: Padding(
-              padding: EdgeInsets.only(top: 8),
-              child: DropdownButton<Country>(
-                value: selectedItem,
-                onChanged: (Country newValue) {
-                  setState(() {
-                    selectedItem = newValue;
-                  });
-                  _validatePhoneNumber();
-                },
-                items: itemList.map<DropdownMenuItem<Country>>((Country value) {
-                  return DropdownMenuItem<Country>(
-                    value: value,
-                    child: Container(
-                      padding: const EdgeInsets.only(bottom: 5.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Text(value.code),
-                          SizedBox(width: 4),
-                          Image.asset(
-                            value.flagUri,
-                            width: 32.0,
-                            package: 'international_phone_input',
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                DropdownButtonHideUnderline(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: DropdownButton<Country>(
+                      value: selectedItem,
+                      onChanged: (Country newValue) {
+                        setState(() {
+                          selectedItem = newValue;
+                        });
+                        _validatePhoneNumber();
+                      },
+                      items: itemList
+                          .map<DropdownMenuItem<Country>>((Country value) {
+                        return DropdownMenuItem<Country>(
+                          value: value,
+                          child: Container(
+                            padding: const EdgeInsets.only(bottom: 5.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Text(value.code),
+                                SizedBox(width: 4),
+                                Image.asset(
+                                  value.flagUri,
+                                  width: 32.0,
+                                  package: 'international_phone_input',
+                                ),
+                                SizedBox(width: 4),
+                                Text(value.dialCode)
+                              ],
+                            ),
                           ),
-                          SizedBox(width: 4),
-                          Text(value.dialCode)
-                        ],
-                      ),
+                        );
+                      }).toList(),
                     ),
-                  );
-                }).toList(),
-              ),
+                  ),
+                ),
+                Flexible(
+                    child: TextField(
+                  keyboardType: TextInputType.phone,
+                  controller: phoneTextController,
+                  decoration: InputDecoration(
+                    hintText: hintText,
+                    errorText: hasError ? errorText : null,
+                    hintStyle: hintStyle ?? null,
+                    errorStyle: errorStyle ?? null,
+                    errorMaxLines: errorMaxLines ?? 3,
+                  ),
+                ))
+              ],
             ),
-          ),
-          Flexible(
-              child: TextField(
-            keyboardType: TextInputType.phone,
-            controller: phoneTextController,
-            decoration: InputDecoration(
-              hintText: hintText,
-              errorText: hasError ? errorText : null,
-              hintStyle: hintStyle ?? null,
-              errorStyle: errorStyle ?? null,
-              errorMaxLines: errorMaxLines ?? 3,
-            ),
-          ))
-        ],
-      ),
-    );
+          );
   }
 }
