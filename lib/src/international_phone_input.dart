@@ -142,37 +142,55 @@ class _InternationalPhoneInputState extends State<InternationalPhoneInput> {
                 DropdownButtonHideUnderline(
                   child: Padding(
                     padding: EdgeInsets.only(top: 8),
-                    child: DropdownButton<Country>(
-                      value: selectedItem,
-                      onChanged: (Country newValue) {
-                        setState(() {
-                          selectedItem = newValue;
-                        });
-                        _validatePhoneNumber();
-                      },
-                      items: itemList
-                          .map<DropdownMenuItem<Country>>((Country value) {
-                        return DropdownMenuItem<Country>(
-                          value: value,
-                          child: Container(
-                            padding: const EdgeInsets.only(bottom: 5.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Text(value.code),
-                                SizedBox(width: 4),
-                                Image.asset(
-                                  value.flagUri,
-                                  width: 32.0,
-                                  package: 'international_phone_input',
-                                ),
-                                SizedBox(width: 4),
-                                Text(value.dialCode)
-                              ],
+                    child: Theme(
+                      data: Theme.of(context).copyWith(
+                        canvasColor: Colors.grey[200],
+                      ),
+                      child: DropdownButton<Country>(
+                        value: selectedItem,
+                        onChanged: (Country newValue) {
+                          setState(() {
+                            selectedItem = newValue;
+                          });
+                          _validatePhoneNumber();
+                        },
+                        items: itemList
+                            .map<DropdownMenuItem<Country>>((Country value) {
+                          return DropdownMenuItem<Country>(
+                            value: value,
+                            child: Container(
+                              padding: const EdgeInsets.only(bottom: 5.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Container(
+                                    child: Text(
+                                      value.code,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    width: 32.0,
+                                  ),
+                                  SizedBox(width: 4),
+                                  Image.asset(
+                                    value.flagUri,
+                                    width: 32.0,
+                                    package: 'international_phone_input',
+                                  ),
+                                  SizedBox(width: 4),
+                                  Container(
+                                    child: Text(
+                                      value.dialCode,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    width: 48,
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      }).toList(),
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ),
                 ),
