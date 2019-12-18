@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:international_phone_input/src/country.dart';
 import 'package:international_phone_input/src/phone_service.dart';
@@ -92,7 +93,7 @@ class _InternationalPhoneInputTextState
           //isolate local number before parsing. Using length-1 to cut the '+'
           String localNumber = number.substring(country.dialCode.length - 1);
           isValid =
-              await PhoneService.parsePhoneNumber(localNumber, country.code);
+              kIsWeb ? true : await PhoneService.parsePhoneNumber(localNumber, country.code);
           if (isValid) {
             fullNumber = await PhoneService.getNormalizedPhoneNumber(
                 localNumber, country.code);

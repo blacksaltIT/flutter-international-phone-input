@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:international_phone_input/src/country.dart';
 import 'package:libphonenumber/libphonenumber.dart';
@@ -49,6 +50,10 @@ class PhoneService {
   }
 
   static Future<bool> parsePhoneNumber(String number, String iso) async {
+
+    if (kIsWeb)
+      return Future.value(true);
+      
     try {
       bool isValid = await PhoneNumberUtil.isValidPhoneNumber(
           phoneNumber: number, isoCode: iso);
