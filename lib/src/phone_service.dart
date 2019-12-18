@@ -50,10 +50,8 @@ class PhoneService {
   }
 
   static Future<bool> parsePhoneNumber(String number, String iso) async {
+    if (kIsWeb) return Future.value(true);
 
-    if (kIsWeb)
-      return Future.value(true);
-      
     try {
       bool isValid = await PhoneNumberUtil.isValidPhoneNumber(
           phoneNumber: number, isoCode: iso);
@@ -65,6 +63,8 @@ class PhoneService {
 
   static Future<String> getNormalizedPhoneNumber(
       String number, String iso) async {
+    if (kIsWeb) return Future.value("($iso)$number");
+
     try {
       String normalizedNumber = await PhoneNumberUtil.normalizePhoneNumber(
           phoneNumber: number, isoCode: iso);
